@@ -17,7 +17,8 @@ export function closeModal() {
   document.getElementById('modal-overlay').classList.remove('modal-overlay-show');
   document.getElementById('modal-content').innerHTML = ''
   document.body.style.overflow = 'auto'
-  handleUrl('', "close")
+  handleUrl('', "close", "event")
+  handleUrl('', "close", "photos")
 }
 
 // OPEN/CLOSE MENU FUNCTION
