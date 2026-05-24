@@ -3,8 +3,24 @@ import {
   populateCard,
   sortEvents,
   populateModal,
+  populatePhotosModal,
 } from './modules/cardPopulator.js'
 import { changeLinkState, handleMenu, closeModal } from './modules/DOMManipulationUtils.js'
+
+function openPhotosFromElement(el) {
+  const folder = el.dataset.folder
+  const count = parseInt(el.dataset.count, 10)
+  const ext = el.dataset.ext || 'jpeg'
+  const prefix = el.dataset.prefix
+  // Read the button's text from its first text node so the arrow SVG is excluded
+  const titleNode = Array.from(el.childNodes).find(
+    (n) => n.nodeType === Node.TEXT_NODE && n.textContent.trim()
+  )
+  const title = titleNode ? titleNode.textContent.trim() : el.textContent.trim()
+  if (folder && count) {
+    populatePhotosModal({ id: el.id, title, folder, count, ext, prefix })
+  }
+}
 
 document.addEventListener('DOMContentLoaded', function () {
   // NAVBAR LINKS ACTIVE STATE
@@ -67,6 +83,23 @@ document.addEventListener('DOMContentLoaded', function () {
     .addEventListener('click', function () {
       closeModal()
     })
+
+  // OPEN PHOTOS MODAL
+  document.querySelectorAll('.open-photos').forEach((link) => {
+    link.addEventListener('click', function (e) {
+      e.preventDefault()
+      openPhotosFromElement(this)
+    })
+  })
+
+  // OPEN PHOTOS MODAL FROM URL SLUG (e.g. ?photos=i-dh-night)
+  const photosParam = new URL(window.location.href).searchParams.get('photos')
+  if (photosParam) {
+    const target = document.getElementById(photosParam)
+    if (target && target.classList.contains('open-photos')) {
+      openPhotosFromElement(target)
+    }
+  }
 
   // OPEN/CLOSE TOPIC DESCRIPTION
   document.querySelectorAll('.research-topic').forEach((topic) => {
