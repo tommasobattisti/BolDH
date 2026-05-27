@@ -140,3 +140,28 @@ export function populateModal(id, eventStatus, agendaArray) {
   document.getElementById('expansion-container').classList.add('expansion-container-show');
   document.body.style.overflow = 'hidden'
 }
+
+// POPULATE MODAL WITH A GRID OF PHOTOS FROM A GIVEN FOLDER
+export function populatePhotosModal({ id, title, folder, count, ext = 'jpeg', prefix }) {
+  if (id) handleUrl(id, 'open', 'photos')
+
+  const modalContent = document.getElementById('modal-content')
+  modalContent.innerHTML = ''
+
+  const filePrefix = prefix || folder
+  const titleBlock = `<div id='modal-t-sbt-cnt'><h4 id='modal-title'>${title}</h4></div>`
+
+  let photosHtml = ''
+  for (let i = 1; i <= count; i++) {
+    const src = `assets/img/${folder}/${filePrefix}_${i}.${ext}`
+    photosHtml += `<a class='photo-grid-item' href='${src}' target='_blank' rel='noopener'><img src='${src}' alt='${title} — photo ${i}' loading='lazy'></a>`
+  }
+  const grid = `<div class='photo-grid'>${photosHtml}</div>`
+  const mainContent = `<div id='modal-main-cnt'>${grid}</div>`
+
+  modalContent.innerHTML = titleBlock + mainContent
+
+  document.getElementById('modal-overlay').classList.add('modal-overlay-show')
+  document.getElementById('expansion-container').classList.add('expansion-container-show')
+  document.body.style.overflow = 'hidden'
+}
